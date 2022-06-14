@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Barrier - Free Map</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script src="https://kit.fontawesome.com/a50a312e3f.js" crossorigin="anonymous"></script>
+    </head>
+        <div class = 'menu-bar'>
+            <div class= "dropText"><i class="fa-solid fa-wheelchair-move" style="color: rgb(236, 88, 48); margin-right: 12px;"></i><strong><strong>   Barrier-Free Map</strong></strong></div>
+            <a href="#" style="margin-right: 50px;"><i class="fa-solid fa-map-location-dot"></i> Map </a>
+            <a href="#"><i class="fa-solid fa-book-bookmark"></i> How </a>
+            <a href="#"><i class="fa-solid fa-house-chimney"></i> Home</a>
+        </div>
+        <div class="map_wrap">
+            <div id="map" style="width: 100%; height: 90vh"></div>
+            <button id="search" class="search_btn" onclick="menu_wrap.style.display='block'; search.style.display='none';"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <div id="menu_wrap" class = "bg_white">
+                <div class = "option">
+                    <div>
+                        <!-- <button><i class="fa-solid fa-arrow-left-to-line" style="color: black;"></i></button> -->
+                        <form onsubmit="searchPlace(); return false;">
+                            <button onclick="menu_wrap.style.display='none'; search.style.display='block';" style="background-color: rgba(255, 0, 0, 0); width: 30px; height: 30px;"><i class="fa-solid fa-circle-arrow-left" style="color: rgb(136, 220, 72)"></i></button>
+                            <input type = "text" value = "" id="keyword" size="15" style="margin-top: 5px; margin-bottom: 0px;">
+                            <button class="btn" type="submit">search</button>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <ul id="placeList"></ul>
+                <div id="pagination"></div>
+            </div>
+        </div>
+        <!-- <div class="category">
+            <ul>
+                <li id="coffeeMenu" onclick="changeMarker('coffee')">
+                    <span class="ico_comm ico_coffee"></span>
+                    커피숍
+                </li>
+                <li id="storeMenu" onclick="changeMarker('store')">
+                    <span class="ico_comm ico_store"></span>
+                    편의점
+                </li>
+                <li id="carparkMenu" onclick="changeMarker('carpark')">
+                    <span class="ico_comm ico_carpark"></span>
+                    주차장
+                </li>
+            </ul>
+        </div> -->
+        <input id="btn" type="button" value="내 위치" onclick="myPosition();"></input>
+        300m<input id="distance_ctrl_btn" type="range" min="300" max="1500" step="300" value="거리" list="distance" onclick="checkDistance()">1.5km</input>
+        <datalist id="distance">
+            <option value="600" label="600m">
+            <option value="900" label="900m">
+            <option value="1200" label="1.2km">
+            </datalist>
+        <div id="map" style="width: 100%; height: 89vh"></div>
+        <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=8c01405af7776f1bebaa741aee401d5d&libraries=clusterer"></script>
+        <script src="js\main.js"></script>
+        <script src="js\marker.js"></script>
+    </body>
+</html>
