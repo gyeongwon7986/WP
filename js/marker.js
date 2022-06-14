@@ -1,14 +1,15 @@
-const serviceKey ="9X%2Fzf1vyCizkHr5LSjQlCtk4O4GKaIIKnB9yggi1pFdVrM7f02Ne1lJwI%2B8mP3Dn8GzuM0WfK7xcdUvjT%2FKAjQ%3D%3D";
+const serviceKey =
+  "9X%2Fzf1vyCizkHr5LSjQlCtk4O4GKaIIKnB9yggi1pFdVrM7f02Ne1lJwI%2B8mP3Dn8GzuM0WfK7xcdUvjT%2FKAjQ%3D%3D";
 
 var contentTypeId_14_Positions = [],
-    contentTypeId_32_Positions = [],
-    contentTypeId_38_Positions = [],
-    contentTypeId_39_Positions = [];
+  contentTypeId_32_Positions = [],
+  contentTypeId_38_Positions = [],
+  contentTypeId_39_Positions = [];
 
 var Markers_contentTypeId_14 = [], // 커피숍 마커 객체를 가지고 있을 배열입니다
-    Markers_contentTypeId_32 = [],
-    Markers_contentTypeId_38 = [],
-    Markers_contentTypeId_39 = [];
+  Markers_contentTypeId_32 = [],
+  Markers_contentTypeId_38 = [],
+  Markers_contentTypeId_39 = [];
 
 function createMarker(position, image) {
   var marker = new kakao.maps.Marker({
@@ -73,7 +74,7 @@ function createMarkers_contentTypeId_14() {
     // 마커이미지와 마커를 생성
     var markerImage_contentTypeId_14 = new kakao.maps.MarkerImage(
         "imgs/museum.png",
-        new kakao.maps.Size(64, 69),
+        new kakao.maps.Size(30, 30),
         new kakao.maps.Point(27, 69)
       ),
       marker = createMarker(
@@ -95,7 +96,7 @@ function createMarkers_contentTypeId_32() {
   for (var i = 0; i < contentTypeId_32_Positions.length; i++) {
     var markerImage_contentTypeId_32 = new kakao.maps.MarkerImage(
         "imgs/sleeping.png",
-        new kakao.maps.Size(64, 69),
+        new kakao.maps.Size(30, 30),
         new kakao.maps.Point(27, 69)
       ),
       marker = createMarker(
@@ -115,7 +116,7 @@ function createMarkers_contentTypeId_38() {
   for (var i = 0; i < contentTypeId_38_Positions.length; i++) {
     var markerImage_contentTypeId_38 = new kakao.maps.MarkerImage(
         "imgs/museum.png",
-        new kakao.maps.Size(64, 69),
+        new kakao.maps.Size(30, 30),
         new kakao.maps.Point(27, 69)
       ),
       marker = createMarker(
@@ -136,9 +137,9 @@ function createMarkers_contentTypeId_39() {
     // 마커이미지와 마커를 생성합니다
     var markerImage_contentTypeId_39 = new kakao.maps.MarkerImage(
         "imgs/restaurant.png",
-        new kakao.maps.Size(64, 69),
+        new kakao.maps.Size(30, 30),
         new kakao.maps.Point(27, 69)
-    ),
+      ),
       marker = createMarker(
         contentTypeId_39_Positions[i],
         markerImage_contentTypeId_39
