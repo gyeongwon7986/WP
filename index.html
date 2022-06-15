@@ -8,20 +8,21 @@
     </head>
         <div class = 'menu-bar'>
             <div class= "dropText"><i class="fa-solid fa-wheelchair-move" style="color: rgb(236, 88, 48); margin-right: 12px;"></i><strong><strong>   Barrier-Free Map</strong></strong></div>
-            <a href="#" style="margin-right: 50px;"><i class="fa-solid fa-map-location-dot"></i> Map </a>
+            <a href=".\index.html" style="margin-right: 50px;"><i class="fa-solid fa-map-location-dot"></i> Map </a>
             <a href="#"><i class="fa-solid fa-book-bookmark"></i> How </a>
-            <a href="#"><i class="fa-solid fa-house-chimney"></i> Home</a>
+            <a href=".\home.html"><i class="fa-solid fa-house-chimney"></i> Home</a>
         </div>
         <div class="map_wrap">
             <div id="map" style="width: 100%; height: 90vh"></div>
             <button id="search" class="search_btn" onclick="menu_wrap.style.display='block'; search.style.display='none';"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button id="myposition" class="MP_btn" onclick="myPosition()"><i class="fa-solid fa-location-crosshairs"></i></button>
             <div id="menu_wrap" class = "bg_white">
                 <div class = "option">
                     <div>
-                        <!-- <button><i class="fa-solid fa-arrow-left-to-line" style="color: black;"></i></button> -->
-                        <form onsubmit="searchPlace(); return false;">
-                            <button onclick="menu_wrap.style.display='none'; search.style.display='block';" style="background-color: rgba(255, 0, 0, 0); width: 30px; height: 30px;"><i class="fa-solid fa-circle-arrow-left" style="color: rgb(136, 220, 72)"></i></button>
-                            <input type = "text" value = "" id="keyword" size="15" style="margin-top: 5px; margin-bottom: 0px;">
+                        <form onsubmit="takeKeyword(); return false;">
+                            <i class="fa-solid fa-square-xmark" onclick="menu_wrap.style.display='none'; search.style.display='block';" 
+                            style="font-size:25px; position: absolute; top: 0; left: 0; margin: 3px 0 30px 10px; padding: 5px; color : rgb(95, 210, 210);"></i>
+                            <input type = "text" id="keyword" size="15" style="margin-top: 5px; margin-bottom: 5px; margin-left: 30px;" value="키워드를 입력하세요.">
                             <button class="btn" type="submit">search</button>
                         </form>
                     </div>
@@ -47,16 +48,16 @@
                 </li>
             </ul>
         </div> -->
-        <input id="btn" type="button" value="내 위치" onclick="myPosition();"></input>
-        300m<input id="distance_ctrl_btn" type="range" min="300" max="1500" step="300" value="거리" list="distance" onclick="checkDistance()">1.5km</input>
+        <!-- 300m<input id="distance_ctrl_btn" type="range" min="300" max="1500" step="300" value="거리" list="distance" onclick="checkDistance()">1.5km</input>
         <datalist id="distance">
             <option value="600" label="600m">
             <option value="900" label="900m">
             <option value="1200" label="1.2km">
-            </datalist>
+            </datalist> -->
         <div id="map" style="width: 100%; height: 89vh"></div>
         <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=8c01405af7776f1bebaa741aee401d5d&libraries=clusterer"></script>
         <script src="js\main.js"></script>
         <script src="js\marker.js"></script>
+        <script src="js\search.js"></script>
     </body>
 </html>
