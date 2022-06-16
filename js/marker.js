@@ -29,6 +29,11 @@ async function data_contentTypeId(num_Id) {
     "&mapX=126.961611&mapY=37.568477&radius=100000000&returnType=JSON&returnType=JSON";
 
   // 카테고리별 위치 좌표가 저장될 배열
+  // contentTypeId(14) : 문화시설
+  // contentTypeId(32) : 숙박시설
+  // contentTypeId(38) : 쇼핑센터
+  // contentTypeId(39) : 음식점
+
   const res = await fetch(url + serviceKey + num_Id, {
     headers: {
       Accept: "application / json",
@@ -59,10 +64,7 @@ async function data_contentTypeId(num_Id) {
   createMarkers_contentTypeId_38();
   createMarkers_contentTypeId_39();
 
-  setMarkers_contentTypeId_14(map);
-  setMarkers_contentTypeId_32(map);
-  setMarkers_contentTypeId_38(map);
-  setMarkers_contentTypeId_39(map);
+  
 }
 
 // changeMarker('coffee'); // 지도에 커피숍 마커가 보이도록 설정합니다
@@ -102,7 +104,7 @@ function createMarkers_contentTypeId_32() {
       marker = createMarker(
         contentTypeId_32_Positions[i],
         markerImage_contentTypeId_32
-      ); //수정!
+      ); 
     Markers_contentTypeId_32.push(marker);
   }
 }
@@ -115,14 +117,14 @@ function setMarkers_contentTypeId_32(map) {
 function createMarkers_contentTypeId_38() {
   for (var i = 0; i < contentTypeId_38_Positions.length; i++) {
     var markerImage_contentTypeId_38 = new kakao.maps.MarkerImage(
-        "imgs/museum.png",
+        "imgs/shop.png",
         new kakao.maps.Size(30, 30),
         new kakao.maps.Point(27, 69)
       ),
       marker = createMarker(
         contentTypeId_38_Positions[i],
         markerImage_contentTypeId_38
-      ); //수정!
+      ); 
     Markers_contentTypeId_38.push(marker);
   }
 }
@@ -165,3 +167,44 @@ async function main() {
 
 // start main
 main();
+
+function checkBox(){
+//체크박스에 따라 마커를 표시
+if(document.getElementsByName("category")[0].checked == true) {
+  setMarkers_contentTypeId_14(map);
+  console.log("체크됐는디");
+}
+else{
+  setMarkers_contentTypeId_14(null);
+  console.log("체크해제됐는디");
+}
+
+if(document.getElementsByName("category")[1].checked == true) {
+  setMarkers_contentTypeId_32(map);
+  console.log("체크됐는디");
+}
+else{
+  setMarkers_contentTypeId_32(null);
+  console.log("체크해제됐는디");
+}
+
+if(document.getElementsByName("category")[2].checked == true) {
+  setMarkers_contentTypeId_38(map);
+  console.log("체크됐는디");
+}
+else{
+  setMarkers_contentTypeId_38(null);
+  console.log("체크해제됐는디");
+}
+
+if(document.getElementsByName("category")[3].checked == true) {
+  setMarkers_contentTypeId_39(map);
+  console.log("체크됐는디");
+}
+else{
+  setMarkers_contentTypeId_39(null);
+  console.log("체크해제됐는디");
+}
+}
+
+
