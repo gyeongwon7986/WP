@@ -1,38 +1,147 @@
 const serviceKey =
-  "BQ5G8W9qbYbZZzOPbgb8fFOwAUFRg9UwbH7mwSeQiLfkUND4254Xq6HniXM900w%2FjTFfT89a4dT4J%2FqGU8hvbQ%3D%3D";
+  "xJXpzEXUkIPqgV1HNGPR9%2FX6Wey9dZike9lmYPH6VZ0Utqu5IWFu7RrwvNeGU7lpG%2BJ%2B0WnhkFuW97pFbWuomw%3D%3D";
 
-var contentTypeId_14_Positions = [],
-  contentTypeId_32_Positions = [],
-  contentTypeId_38_Positions = [],
-  contentTypeId_39_Positions = [];
-
-var Markers_contentTypeId_14 = [], // 커피숍 마커 객체를 가지고 있을 배열입니다
-  Markers_contentTypeId_32 = [],
-  Markers_contentTypeId_38 = [],
-  Markers_contentTypeId_39 = [];
-
-function createMarker(position, image) {
-  var marker = new kakao.maps.Marker({
-    position: position,
-    image: image,
-  });
-
-  return marker;
+//커서를 마커에 두었을 때 실행되는 함수
+function mouseOverListener(map, CustomOverlay) {
+  return function() {
+    CustomOverlay.setMap(map); //커스텀 오버레이가 열린다.
+  };
 }
 
-async function data_contentTypeId(num_Id) {
-  url =
+//커서를 마커에서 땠을 때 실행되는 함수
+function mouseOutListener (CustomOverlay) {
+  return function() {
+    CustomOverlay.setMap(null); //커스텀 오버레이가 닫힌다.
+  }
+}
+
+//contentTypeId별 마커를 담을 배열
+var markers14 = [],
+  markers32 = [],
+  markers38 = [],
+  markers39 = [];
+
+  //contentTypeId가 14인 객체의 마커를 지도에 표시하는 함수
+  async function data_ctTI14(map) {
+    num_Id = 14;
+    url =
     "http://api.visitkorea.or.kr/openapi/service/rest/KorWithService/locationBasedList?serviceKey=" +
     serviceKey +
     "&numOfRows=2000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&listYN=Y&arrange=A&contentTypeId=" +
     num_Id +
     "&mapX=126.961611&mapY=37.568477&radius=100000000&returnType=JSON&returnType=JSON";
+  
+    const res = await fetch(url + serviceKey + num_Id, {
+      headers: {
+        Accept: "application / json",
+      },
+    });
+    const response = await res.json();
+    const places = await response.response.body.items.item;
+  
+    for (var i = 0; i < places.length; i++) {
 
-  // 카테고리별 위치 좌표가 저장될 배열
-  // contentTypeId(14) : 문화시설
-  // contentTypeId(32) : 숙박시설
-  // contentTypeId(38) : 쇼핑센터
-  // contentTypeId(39) : 음식점
+      //해당 장소의 위도와 경도, 이름을 받아옴
+      var mapx = places[i]["mapx"];
+      var mapy = places[i]["mapy"];
+      var title = places[i]["title"];
+      //var contentid = places[i]["contentid"];
+  
+      //마커 스타일 지정하기
+      var markerImg_14 = new kakao.maps.MarkerImage(
+        "imgs/museum.png",
+        new kakao.maps.Size(35, 35),
+        new kakao.maps.Point(17, 56)
+      )
+
+      //마커 선언하기
+      var marker = new kakao.maps.Marker({
+        position : new kakao.maps.LatLng(mapy, mapx),
+        image : markerImg_14
+      })
+  
+      //마커에 마우스에 올렸을 때 이름을 알려줄 인포윈도우 내용 지정
+      var iwContent = '<div class="customInfo", style="padding:5px;"><strong>' + title + '</strong></div>';
+  
+      //iwcontent를 가진 커스텀 오버레이 생성하기
+      var CustomOverlay = new kakao.maps.CustomOverlay({
+        position : new kakao.maps.LatLng(mapy, mapx),
+        content : iwContent
+      });
+  
+      //marker을 배열에다 담기
+      markers14.push(marker);
+  
+      //마커에 마우스 이벤트 등록하기
+      kakao.maps.event.addListener(marker, 'mouseover', mouseOverListener(map, CustomOverlay));
+      kakao.maps.event.addListener(marker, "mouseout", mouseOutListener(CustomOverlay));
+      //kakao.maps.event.addListener(marker, 'click', getInfo(map, marker, contentid));
+    }
+    //마커를 지도에다 표시하기
+    for (var i = 0; i < markers14.length; i++) {
+      markers14[i].setMap(map);
+    }
+  }
+
+//실패한 닫기가 가능한 커스텀 오버레이 함수
+// function getInfo(map, marker, contentid) {
+//   var contentTypeId = 14;
+//   var url = "http://api.visitkorea.or.kr/openapi/service/rest/KorWithService/detailCommon?encodeURIcomponet('serviceKey')" + "=" + 
+//   serviceKey + "&" + dencodeURIcomponent('numOfRows') + "=" + "10" + "&" + encodeURIcomponent('pageNo') + "=" + "1" + "&" + dencodeURIcomponent('MobileOS') + "=" + "ETC" + "&" + dencodeURIcomponent('MobileApp') + "=" + 'AppTest' 
+//   + "&" + dencodeURIcomponent('contentId') + "=" + 
+//   contentid + "&" + dencodeURIcomponent('contentTypeId') + "=" + 
+//   contentTypeId + "&" + dencodeURIcomponent('defaultYN') + "=" + "Y" + "&" + dencodeURIcomponent(firstImageYN) + "=Y&" 
+//   + dencodeURIcomponent('areacodeYN') + "=Y&" + dencodeURIcomponent('catcodeYN') + "=Y&" +
+//   dencodeURIcomponent('addrinfoYN') + "=Y&" + dencodeURIcomponent('mapinfoYN') + "=Y&" +
+//   dencodeURIcomponent(overviewYN) + "=Y&" + "returnType=Json";
+
+//   fetch(url, {
+//     headers: {
+//       'Accept' : 'application / json'
+//     }
+//   })
+//   .then((res) => res.json())
+//   .then((resJson) => {
+//     place = resJson.response.body.items.item;
+
+//     var content = '<div class="wrap">' + 
+//                 '    <div class="info">' + 
+//                 '        <div class="title">' + 
+//                               place.title + 
+//                 '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+//                 '        </div>' + 
+//                 '        <div class="body">' + 
+//                 '            <div class="img">' +
+//                 '                <img src="' + place.firstimage + '" width="73" height="70">' +
+//                 '           </div>' + 
+//                 '            <div class="desc">' + 
+//                 '                <div class="ellipsis">' + place.addr1 + '</div>' + 
+//                 '                <div class="jibun ellipsis">' + '(우)' + place.zipcode + '(지번)' + place.addr2 + '</div>' + 
+//                 '                <div>' + place.homepage + '</div>' + 
+//                 '            </div>' + 
+//                 '        </div>' + 
+//                 '    </div>' +    
+//                 '</div>';
+
+//       var overlay = new kakao.maps.CustomOverlay({
+//         content: content,
+//         map: map,
+//         position: marker.getPosition()
+//       });
+
+//       overlay.setMap(map);
+//   })
+// }
+
+//contentTypeId가 32인 객체의 마커를 지도에 표시하는 함수
+async function data_ctTI32(map) {
+  num_Id = 32;
+  url =
+  "http://api.visitkorea.or.kr/openapi/service/rest/KorWithService/locationBasedList?serviceKey=" +
+  serviceKey +
+  "&numOfRows=2000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&listYN=Y&arrange=A&contentTypeId=" +
+  num_Id +
+  "&mapX=126.961611&mapY=37.568477&radius=100000000&returnType=JSON&returnType=JSON";
 
   const res = await fetch(url + serviceKey + num_Id, {
     headers: {
@@ -43,168 +152,200 @@ async function data_contentTypeId(num_Id) {
   const places = await response.response.body.items.item;
 
   for (var i = 0; i < places.length; i++) {
+    //해당 장소의 위도와 경도, 이름을 받아옴
     var mapx = places[i]["mapx"];
     var mapy = places[i]["mapy"];
+    var title = places[i]["title"];
 
-    new kakao.maps.LatLng(mapy, mapx);
+    //마커 스타일 지정하기
+    var markerImg_32 = new kakao.maps.MarkerImage(
+      "imgs/sleeping.png",
+      new kakao.maps.Size(35, 35),
+      new kakao.maps.Point(17, 56)
+    )
 
-    if (num_Id == 14) {
-      contentTypeId_14_Positions.push(new kakao.maps.LatLng(mapy, mapx));
-    } else if (num_Id == 32) {
-      contentTypeId_32_Positions.push(new kakao.maps.LatLng(mapy, mapx));
-    } else if (num_Id == 38) {
-      contentTypeId_38_Positions.push(new kakao.maps.LatLng(mapy, mapx));
-    } else if (num_Id == 39) {
-      contentTypeId_39_Positions.push(new kakao.maps.LatLng(mapy, mapx));
-    }
+    //마커 선언하기
+    var marker = new kakao.maps.Marker({
+      position : new kakao.maps.LatLng(mapy, mapx),
+      image : markerImg_32
+    })
+
+    //마커에 마우스에 올렸을 때 이름을 알려줄 인포윈도우 내용 지정
+    var iwContent = '<div class="customInfo", style="padding:5px;"><strong>' + title + '</strong></div>';
+
+
+    //iwcontent를 가진 커스텀 오버레이 생성하기
+    var CustomOverlay = new kakao.maps.CustomOverlay({
+      position : new kakao.maps.LatLng(mapy, mapx),
+      content : iwContent
+    });
+
+    //marker을 배열에다 담기
+    markers32.push(marker);
+
+    //마커에 마우스 이벤트 등록하기
+    kakao.maps.event.addListener(marker, 'mouseover', mouseOverListener(map, CustomOverlay));
+    kakao.maps.event.addListener(marker, "mouseout", mouseOutListener(CustomOverlay));
   }
-
-  createMarkers_contentTypeId_14();
-  createMarkers_contentTypeId_32();
-  createMarkers_contentTypeId_38();
-  createMarkers_contentTypeId_39();
-
-  
-}
-
-// changeMarker('coffee'); // 지도에 커피숍 마커가 보이도록 설정합니다
-
-//여기부터
-function createMarkers_contentTypeId_14() {
-  console.log("여기", contentTypeId_14_Positions.length);
-  for (var i = 0; i < contentTypeId_14_Positions.length; i++) {
-    // 마커이미지와 마커를 생성
-    var markerImage_contentTypeId_14 = new kakao.maps.MarkerImage(
-        "imgs/museum.png",
-        new kakao.maps.Size(30, 30),
-        new kakao.maps.Point(27, 69)
-      ),
-      marker = createMarker(
-        contentTypeId_14_Positions[i],
-        markerImage_contentTypeId_14
-      ); //수정!
-
-    // 생성된 마커를 마커 배열에 추가
-    Markers_contentTypeId_14.push(marker);
-  }
-}
-function setMarkers_contentTypeId_14(map) {
-  for (var i = 0; i < Markers_contentTypeId_14.length; i++) {
-    Markers_contentTypeId_14[i].setMap(map);
+  //마커를 지도에다 표시하기
+  for (var i = 0; i < markers32.length; i++) {
+    markers32[i].setMap(map);
   }
 }
 
-function createMarkers_contentTypeId_32() {
-  for (var i = 0; i < contentTypeId_32_Positions.length; i++) {
-    var markerImage_contentTypeId_32 = new kakao.maps.MarkerImage(
-        "imgs/sleeping.png",
-        new kakao.maps.Size(30, 30),
-        new kakao.maps.Point(27, 69)
-      ),
-      marker = createMarker(
-        contentTypeId_32_Positions[i],
-        markerImage_contentTypeId_32
-      ); 
-    Markers_contentTypeId_32.push(marker);
-  }
+function closeOverlay() {
+  overlay.setMap(null);
 }
-function setMarkers_contentTypeId_32(map) {
-  for (var i = 0; i < Markers_contentTypeId_32.length; i++) {
-    Markers_contentTypeId_32[i].setMap(map);
+
+//contentTypeId가 38인 객체의 마커를 지도에 표시하는 함수
+async function data_ctTI38(map) {
+  num_Id = 38;
+  url =
+  "http://api.visitkorea.or.kr/openapi/service/rest/KorWithService/locationBasedList?serviceKey=" +
+  serviceKey +
+  "&numOfRows=2000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&listYN=Y&arrange=A&contentTypeId=" +
+  num_Id +
+  "&mapX=126.961611&mapY=37.568477&radius=100000000&returnType=JSON&returnType=JSON";
+
+  const res = await fetch(url + serviceKey + num_Id, {
+    headers: {
+      Accept: "application / json",
+    },
+  });
+  const response = await res.json();
+  const places = await response.response.body.items.item;
+
+  for (var i = 0; i < places.length; i++) {
+    //해당 장소의 위도와 경도, 이름을 받아옴
+    var mapx = places[i]["mapx"];
+    var mapy = places[i]["mapy"];
+    var title = places[i]["title"];
+
+    //마커 스타일 지정하기
+    var markerImg_38 = new kakao.maps.MarkerImage(
+      "imgs/shop.png",
+      new kakao.maps.Size(35, 35),
+      new kakao.maps.Point(17, 56)
+    )
+
+    //마커 선언하기
+    var marker = new kakao.maps.Marker({
+      position : new kakao.maps.LatLng(mapy, mapx),
+      image : markerImg_38
+    })
+
+    //마커에 마우스에 올렸을 때 이름을 알려줄 인포윈도우 내용 지정
+    var iwContent = '<div class="customInfo", style="padding:5px;"><strong>' + title + '</strong></div>';
+
+
+    //iwcontent를 가진 커스텀 오버레이 생성하기
+    var CustomOverlay = new kakao.maps.CustomOverlay({
+      position : new kakao.maps.LatLng(mapy, mapx),
+      content : iwContent
+    });
+
+    //marker을 배열에다 담기
+    markers38.push(marker);
+
+    //마커에 마우스 이벤트 등록하기
+    kakao.maps.event.addListener(marker, 'mouseover', mouseOverListener(map, CustomOverlay));
+    kakao.maps.event.addListener(marker, "mouseout", mouseOutListener(CustomOverlay));
+  }
+  //마커를 지도에다 표시하기
+  for (var i = 0; i < markers38.length; i++) {
+    markers38[i].setMap(map);
   }
 }
 
-function createMarkers_contentTypeId_38() {
-  for (var i = 0; i < contentTypeId_38_Positions.length; i++) {
-    var markerImage_contentTypeId_38 = new kakao.maps.MarkerImage(
-        "imgs/shop.png",
-        new kakao.maps.Size(30, 30),
-        new kakao.maps.Point(27, 69)
-      ),
-      marker = createMarker(
-        contentTypeId_38_Positions[i],
-        markerImage_contentTypeId_38
-      ); 
-    Markers_contentTypeId_38.push(marker);
+
+//contentTypeId가 39인 객체의 마커를 지도에 표시하는 함수
+async function data_ctTI39(map) {
+  num_Id = 39;
+  url =
+  "http://api.visitkorea.or.kr/openapi/service/rest/KorWithService/locationBasedList?serviceKey=" +
+  serviceKey +
+  "&numOfRows=2000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&listYN=Y&arrange=A&contentTypeId=" +
+  num_Id +
+  "&mapX=126.961611&mapY=37.568477&radius=100000000&returnType=JSON&returnType=JSON";
+
+  const res = await fetch(url + serviceKey + num_Id, {
+    headers: {
+      Accept: "application / json",
+    },
+  });
+  const response = await res.json();
+  const places = await response.response.body.items.item;
+
+  for (var i = 0; i < places.length; i++) {
+    //해당 장소의 위도와 경도, 이름을 받아옴
+    var mapx = places[i]["mapx"];
+    var mapy = places[i]["mapy"];
+    var title = places[i]["title"];
+
+    //마커 스타일 지정하기
+    var markerImg_39 = new kakao.maps.MarkerImage(
+      "imgs/restaurant.png",
+      new kakao.maps.Size(35, 35),
+      new kakao.maps.Point(17, 56)
+    )
+
+    //마커 선언하기
+    var marker = new kakao.maps.Marker({
+      position : new kakao.maps.LatLng(mapy, mapx),
+      image : markerImg_39
+    })
+
+    //마커에 마우스에 올렸을 때 이름을 알려줄 인포윈도우 내용 지정
+    var iwContent = '<div class="customInfo", style="padding:5px;"><strong>' + title + '</strong></div>';
+
+    //iwcontent를 가진 커스텀 오버레이 생성하기
+    var CustomOverlay = new kakao.maps.CustomOverlay({
+      position : new kakao.maps.LatLng(mapy, mapx),
+      content : iwContent
+    });
+
+    //marker을 배열에다 담기
+    markers39.push(marker);
+
+    //마커에 마우스 이벤트 등록하기
+    kakao.maps.event.addListener(marker, 'mouseover', mouseOverListener(map, CustomOverlay));
+    kakao.maps.event.addListener(marker, "mouseout", mouseOutListener(CustomOverlay));
+  }
+  //마커를 지도에다 표시하기
+  for (var i = 0; i < markers39.length; i++) {
+    markers39[i].setMap(map);
   }
 }
-function setMarkers_contentTypeId_38(map) {
-  for (var i = 0; i < Markers_contentTypeId_38.length; i++) {
-    Markers_contentTypeId_38[i].setMap(map);
-  }
-}
 
-function createMarkers_contentTypeId_39() {
-  for (var i = 0; i < contentTypeId_39_Positions.length; i++) {
-    // 마커이미지와 마커를 생성합니다
-    var markerImage_contentTypeId_39 = new kakao.maps.MarkerImage(
-        "imgs/restaurant.png",
-        new kakao.maps.Size(30, 30),
-        new kakao.maps.Point(27, 69)
-      ),
-      marker = createMarker(
-        contentTypeId_39_Positions[i],
-        markerImage_contentTypeId_39
-      ); //수정!
-
-    // 생성된 마커를 커피숍 마커 배열에 추가합니다
-    Markers_contentTypeId_39.push(marker);
-  }
-}
-function setMarkers_contentTypeId_39(map) {
-  for (var i = 0; i < Markers_contentTypeId_39.length; i++) {
-    Markers_contentTypeId_39[i].setMap(map);
-  }
-}
-
-// main function
-async function main() {
-  await data_contentTypeId(14);
-  await data_contentTypeId(32);
-  await data_contentTypeId(38);
-  await data_contentTypeId(39);
-}
-
-// start main
-main();
-
+//마커 필터의 체크 박스를 실행했을 때 시행되는 함수이다.
 function checkBox(){
-//체크박스에 따라 마커를 표시
-if(document.getElementsByName("category")[0].checked == true) {
-  setMarkers_contentTypeId_14(map);
-  console.log("체크됐는디");
+  //체크박스에 따라 마커를 표시
+  //check박스 체크 여부에 따라 해당 마커가 표시됨
+  if(document.getElementsByName("category")[0].checked == true) {
+    data_ctTI14(map);
+  }
+  else{
+    data_ctTI14(null);
+  }
+  
+  if(document.getElementsByName("category")[1].checked == true) {
+    data_ctTI32(map);
+  }
+  else{
+    data_ctTI32(null);
+  }
+  
+  if(document.getElementsByName("category")[2].checked == true) {
+    data_ctTI38(map);
+  }
+  else{
+    data_ctTI38(null);
+  }
+  
+  if(document.getElementsByName("category")[3].checked == true) {
+    data_ctTI39(map);
+  }
+  else{
+    data_ctTI39(null);
+  }
 }
-else{
-  setMarkers_contentTypeId_14(null);
-  console.log("체크해제됐는디");
-}
-
-if(document.getElementsByName("category")[1].checked == true) {
-  setMarkers_contentTypeId_32(map);
-  console.log("체크됐는디");
-}
-else{
-  setMarkers_contentTypeId_32(null);
-  console.log("체크해제됐는디");
-}
-
-if(document.getElementsByName("category")[2].checked == true) {
-  setMarkers_contentTypeId_38(map);
-  console.log("체크됐는디");
-}
-else{
-  setMarkers_contentTypeId_38(null);
-  console.log("체크해제됐는디");
-}
-
-if(document.getElementsByName("category")[3].checked == true) {
-  setMarkers_contentTypeId_39(map);
-  console.log("체크됐는디");
-}
-else{
-  setMarkers_contentTypeId_39(null);
-  console.log("체크해제됐는디");
-}
-}
-
-

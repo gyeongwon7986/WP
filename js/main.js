@@ -34,17 +34,19 @@ function myPosition(){
             clusterer.removeMarkers(mymarkers);
 
             var locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-            map.setCenter(locPosition);
-			// removemarker 해야함
+            map.setCenter(locPosition); //지도의 중심 좌표를 사용자의 위치로 바꿈
+			
+            //사용자의 위치를 알려줄 마커 표시
 			var mymarkerImage = new kakao.maps.MarkerImage("imgs/user.png", new kakao.maps.Size(30, 40), new kakao.maps.Point(27, 69));
 			var mymarker = new kakao.maps.Marker({
 				position : locPosition,
 				image : mymarkerImage
 			});
 
+            //사용자 위치를 나타내는 마커를 mymarkers 배열에 넣기
             mymarkers.push(mymarker);
 			mymarker.setMap(map);
-            console.log("Success");
+
         });
     } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
         var locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
